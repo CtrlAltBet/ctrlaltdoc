@@ -1,0 +1,245 @@
+:root {
+  --color-secondary-500: 14 165 233;
+  --color-tertiary-500: 99 102 241;
+  --color-surface-50: 249 250 251;
+  --color-surface-100: 243 244 246;
+  --color-surface-200: 229 231 235;
+  --color-surface-300: 209 213 219;
+  --color-surface-400: 156 163 175;
+  --color-surface-500: 107 114 128;
+  --color-surface-600: 75 85 99;
+  --color-surface-700: 55 65 81;
+  --color-surface-800: 31 41 55;
+  --color-surface-900: 17 24 39;
+
+  --color-text-default: 209 212 225;
+  --color-text-link: 220 234 255;
+  --color-header-link: 162, 220, 255;
+  --color-header-text: 255, 255, 255;
+  --color-module-link: 125 188 226;
+  --color-nav-link-active: var(--color-header-link);
+
+  --section-header-bg: rgba(0, 0, 0, 0.5);
+  --section-header-bg-filter: blur(10px);
+
+  --section-bg: rgba(0, 0, 0, 0.05);
+  --section-bg-filter: blur(10px);
+}
+
+* {
+  scrollbar-gutter: stable;
+}
+
+html,
+body {
+  /* scrollbar-color: rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.05); */
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+}
+
+html {
+  background-color: rgb(var(--color-surface-900));
+  background-image:
+    radial-gradient(
+      at 50% 0%,
+      rgba(var(--color-secondary-500) / 0.18) 0px,
+      transparent 75%
+    ),
+    radial-gradient(
+      at 100% 0%,
+      rgba(var(--color-tertiary-500) / 0.18) 0px,
+      transparent 50%
+    );
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+body {
+  background: transparent;
+}
+
+a,
+a:active {
+  color: rgb(var(--color-text-link));
+  text-decoration: none;
+}
+
+body {
+  color: rgb(var(--color-text-default));
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  padding: 0px;
+}
+
+/* Main Block Colors */
+nav {
+  background-color: rgb(var(--color-surface-800));
+  padding: 1rem;
+  /* border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem; */
+}
+
+section {
+  background: var(--section-bg);
+  backdrop-filter: var(--section-bg-filter);
+}
+
+#main {
+  width: calc(100vw - 16rem);
+}
+
+/* Block Styling */
+h4.name {
+  background-color: rgb(var(--color-surface-800));
+  border-color: rgb(var(--color-surface-700));
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+section header h2,
+article .container-overview h2,
+article h3.subsection-title {
+  position: sticky;
+  top: 1px;
+  border-radius: 0.5rem;
+  background: var(--section-header-bg);
+  backdrop-filter: var(--section-header-bg-filter);
+  z-index: 1;
+}
+
+/*  */
+
+section {
+  padding: 0 1rem;
+  /* 0 0 0 30px */
+}
+
+section > * > * {
+  /* padding: 0.5rem; */
+}
+
+table {
+  border-color: rgb(var(--color-surface-700));
+}
+
+thead tr {
+  border-bottom: 1px solid rgb(var(--color-surface-700));
+  background-color: rgb(var(--color-surface-700));
+}
+
+.params td {
+  border-top: 1px solid rgb(var(--color-surface-700));
+  background-color: rgb(var(--color-surface-600) / 0.1);
+}
+
+.details {
+  margin-left: 2rem;
+}
+
+/* TEXT */
+h1,
+h2,
+h3,
+nav h3,
+h4,
+h5,
+h6 {
+  color: rgb(var(--color-header-text));
+}
+
+#main h1,
+#main h2,
+#main h3,
+#main h4,
+#main h5,
+#main h6 {
+  margin: 1.5em 0 0.3em;
+  padding: 0.25rem 1rem;
+}
+
+nav a:hover,
+nav a:active {
+  color: rgb(var(--color-header-link)) !important;
+}
+
+nav > h2 > a {
+  color: rgb(var(--color-header-link)) !important;
+}
+
+nav > ul > li > a {
+  color: rgb(var(--color-module-link)) !important;
+}
+
+nav ul ul a {
+  color: rgb(var(--color-text-link)) !important;
+}
+
+/* CODE COLORS */
+.signature {
+  color: #fc83ff;
+}
+
+.type-signature .type-signature-async {
+  color: #ca79ca;
+}
+
+span.param-type,
+.params td .param-type,
+.param-type dd {
+  color: rgb(197, 207, 20);
+  font-family: Consolas, Monaco, "Andale Mono", monospace;
+}
+
+.type-part.Promise {
+  color: rgb(117, 161, 28);
+}
+
+.type-part.void {
+  color: rgb(154, 205, 50);
+}
+
+.param-privateKey {
+  color: rgb(255, 0, 0);
+}
+
+.param-req,
+.param-res {
+  color: rgb(0, 72, 255);
+  position: relative;
+}
+.param-req::after,
+.param-res::after {
+  color: inherit;
+  position: absolute;
+  left: 0px;
+  top: -1rem;
+
+  background-color: currentColor; /* Inherits text color */
+  content: "";
+  mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M1 14.25v-4.5q0-.325.213-.537T1.75 9t.538.213t.212.537V11h2V9.75q0-.325.213-.537T5.25 9t.538.213T6 9.75v4.5q0 .325-.213.538T5.25 15t-.537-.213t-.213-.537V12.5h-2v1.75q0 .325-.213.538T1.75 15t-.537-.213T1 14.25m7.5 0V10.5h-.75q-.325 0-.537-.213T7 9.75t.213-.537T7.75 9h3q.325 0 .538.213t.212.537t-.213.538t-.537.212H10v3.75q0 .325-.213.538T9.25 15t-.537-.213t-.213-.537m5.5 0V10.5h-.75q-.325 0-.537-.213T12.5 9.75t.213-.537T13.25 9h3q.325 0 .538.213T17 9.75t-.213.538t-.537.212h-.75v3.75q0 .325-.213.538T14.75 15t-.537-.213T14 14.25m4 0v-4.5q0-.325.213-.537T18.75 9h2.75q.6 0 1.05.45T23 10.5v1q0 .6-.45 1.05T21.5 13h-2v1.25q0 .325-.213.538T18.75 15t-.537-.213T18 14.25m1.5-2.75h2v-1h-2z"/></svg>');
+  mask-size: cover;
+  width: 80%;
+  height: 24px;
+}
+
+table tr td code {
+  border-radius: 0.5rem;
+  background: rgba(244, 244, 244, 0.8);
+}
+
+/* , .params .name, .props .name, .name code */
+.params td {
+  color: rgb(var(--color-header-text));
+}
+
+.navRight {
+  top: 0px;
+  bottom: 0px;
+  height: 100vh;
+  overflow: auto;
+  position: fixed;
+  right: 0px;
+}

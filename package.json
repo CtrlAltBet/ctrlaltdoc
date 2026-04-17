@@ -1,0 +1,16 @@
+{
+  "name": "ctrlaltdoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "publish.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Koray K <atlas@ohshift.io> (https://github.com/siniradam)",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "dependencies": {
+    "jsdoc": "^4.0.5"
+  }
+}
