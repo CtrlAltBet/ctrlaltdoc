@@ -109,7 +109,7 @@ article h3.subsection-title {
   border-radius: 0.5rem;
   background: var(--section-header-bg);
   backdrop-filter: var(--section-header-bg-filter);
-  z-index: 1;
+  z-index: 10;
 }
 
 /*  */
@@ -255,7 +255,7 @@ table tr td code {
   height: var(--topnav-height);
   position: sticky;
   top: 0px;
-  z-index: 2;
+  z-index: 10;
   padding: 0.5rem 1rem;
 }
 
@@ -264,6 +264,12 @@ nav {
   overflow-x: hidden;
   position: sticky;
   top: var(--topnav-height);
+}
+
+article > h4.name {
+  position: sticky;
+  top: calc(var(--topnav-height) + 3.5rem);
+  z-index: 8;
 }
 
 /*  */
