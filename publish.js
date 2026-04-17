@@ -262,10 +262,7 @@ function typeEncapsulate(text) {
     if (text.indexOf(".") > -1 && !/<.*>/.test(text)) {
       var parts = text
         .split(".")
-        .map(
-          (part) =>
-            `<span class="type-part ${toClassName(part)}">${part}</span>`,
-        )
+        .map((part) => `<span class="type-part ${toClassName(part)}">${part}</span>`)
         .join(".");
       return parts;
     } else {
@@ -309,10 +306,7 @@ function addAttribs(f) {
       attribsString,
     );
   } else {
-    f.attribs = util.format(
-      '<span class="type-signature">%s</span>',
-      attribsString,
-    );
+    f.attribs = util.format('<span class="type-signature">%s</span>', attribsString);
   }
 }
 
@@ -367,25 +361,13 @@ function generateSourceFiles(sourceFiles, encoding) {
     try {
       source = {
         kind: "source",
-        code: helper.htmlsafe(
-          fs.readFileSync(sourceFiles[file].resolved, encoding),
-        ),
+        code: helper.htmlsafe(fs.readFileSync(sourceFiles[file].resolved, encoding)),
       };
     } catch (e) {
-      logger.error(
-        "Error while generating source file %s: %s",
-        file,
-        e.message,
-      );
+      logger.error("Error while generating source file %s: %s", file, e.message);
     }
 
-    generate(
-      "Source",
-      sourceFiles[file].shortened,
-      [source],
-      sourceOutfile,
-      false,
-    );
+    generate("Source", sourceFiles[file].shortened, [source], sourceOutfile, false);
   });
 }
 
@@ -438,10 +420,10 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
 
   if (items && items.length) {
     var itemsNav = "";
-    var docdash = (env && env.conf && env.conf.docdash) || {};
+    var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
     var level =
-      typeof docdash.navLevel === "number" && docdash.navLevel >= 0
-        ? docdash.navLevel
+      typeof ctrlaltdoc.navLevel === "number" && ctrlaltdoc.navLevel >= 0
+        ? ctrlaltdoc.navLevel
         : Infinity;
 
     items.forEach(function (item) {
@@ -452,7 +434,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
       var classes = "";
 
       // show private class?
-      if (docdash.private === false && item.access === "private") return;
+      if (ctrlaltdoc.private === false && item.access === "private") return;
 
       // depth to show?
       if (item.ancestors && item.ancestors.length > level) {
@@ -475,7 +457,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
         );
 
         if (
-          docdash.static &&
+          ctrlaltdoc.static &&
           members.find(function (m) {
             return m.scope === "static";
           })
@@ -485,7 +467,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
           members.forEach(function (member) {
             if (!member.scope === "static") return;
             itemsNav += "<li data-type='member'";
-            if (docdash.collapse) itemsNav += " style='display: none;'";
+            if (ctrlaltdoc.collapse) itemsNav += " style='display: none;'";
             itemsNav += ">";
             itemsNav += linkto(member.longname, member.name);
             itemsNav += "</li>";
@@ -498,15 +480,14 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
           itemsNav += "<ul class='methods'>";
 
           methods.forEach(function (method) {
-            if (docdash.static === false && method.scope === "static") return;
-            if (docdash.private === false && method.access === "private")
-              return;
+            if (ctrlaltdoc.static === false && method.scope === "static") return;
+            if (ctrlaltdoc.private === false && method.access === "private") return;
 
             var navItem = "";
             var navItemLink = linkto(method.longname, method.name);
 
             navItem += "<li data-type='method'";
-            if (docdash.collapse) navItem += " style='display: none;'";
+            if (ctrlaltdoc.collapse) navItem += " style='display: none;'";
             navItem += ">";
             navItem += navItemLink;
             navItem += "</li>";
@@ -523,7 +504,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
     });
 
     if (itemsNav !== "") {
-      if (docdash.collapse === "top") {
+      if (ctrlaltdoc.collapse === "top") {
         nav +=
           '<h3 class="collapsed_header">' +
           itemHeading +
@@ -566,13 +547,13 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
   var nav = '<h2><a href="index.html">Home</a></h2>';
   var seen = {};
   var seenTutorials = {};
-  var docdash = (env && env.conf && env.conf.docdash) || {};
-  if (docdash.menu) {
-    for (var menu in docdash.menu) {
+  var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
+  if (ctrlaltdoc.menu) {
+    for (var menu in ctrlaltdoc.menu) {
       nav += "<h2><a ";
       //add attributes
-      for (var attr in docdash.menu[menu]) {
-        nav += attr + '="' + docdash.menu[menu][attr] + '" ';
+      for (var attr in ctrlaltdoc.menu[menu]) {
+        nav += attr + '="' + ctrlaltdoc.menu[menu][attr] + '" ';
       }
       nav += ">" + menu + "</a></h2>";
     }
@@ -585,7 +566,7 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
 
       members.globals.forEach(function (g) {
         if (
-          (docdash.typedefs || g.kind !== "typedef") &&
+          (ctrlaltdoc.typedefs || g.kind !== "typedef") &&
           !hasOwnProp.call(seen, g.longname)
         ) {
           globalNav += "<li>" + linkto(g.longname, g.name) + "</li>";
@@ -597,7 +578,7 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
         // turn the heading into a link so you can actually get to the global page
         ret += "<h3>" + linkto("global", "Global") + "</h3>";
       } else {
-        if (docdash.collapse === "top") {
+        if (ctrlaltdoc.collapse === "top") {
           ret +=
             '<h3 class="collapsed_header">Global</h3><ul class="collapse_top">' +
             globalNav +
@@ -622,16 +603,11 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
     "Global",
   ];
 
-  var order = docdash.sectionOrder || defaultOrder;
+  var order = ctrlaltdoc.sectionOrder || defaultOrder;
   var sections = {
     Classes: buildMemberNav(members.classes, "Classes", seen, linkto),
     Modules: buildMemberNav(members.modules, "Modules", {}, linkto),
-    Externals: buildMemberNav(
-      members.externals,
-      "Externals",
-      seen,
-      linktoExternal,
-    ),
+    Externals: buildMemberNav(members.externals, "Externals", seen, linktoExternal),
     Events: buildMemberNav(members.events, "Events", seen, linkto),
     Namespaces: buildMemberNav(members.namespaces, "Namespaces", seen, linkto),
     Mixins: buildMemberNav(members.mixins, "Mixins", seen, linkto),
@@ -647,9 +623,7 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
 
   // Filter out any sections that are empty or not included in the specified order
   if (only) {
-    return sections[only]
-      .replace("display: none;", "")
-      .replace("collapse_top", "");
+    return sections[only].replace("display: none;", "").replace("collapse_top", "");
   } else if (exclude && exclude.length > 0) {
     sections = Object.fromEntries(
       Object.entries(sections).filter(([key]) => !exclude.includes(key)),
@@ -667,10 +641,10 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
     @param {Tutorial} tutorials
  */
 exports.publish = function (taffyData, opts, tutorials) {
-  var docdash = (env && env.conf && env.conf.docdash) || {};
+  var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
   data = taffyData;
 
-  console.log("Generating documentation...", docdash);
+  console.log("Generating documentation...", ctrlaltdoc);
 
   var conf = env.conf.templates || {};
   conf.default = conf.default || {};
@@ -699,14 +673,14 @@ exports.publish = function (taffyData, opts, tutorials) {
 
   data = helper.prune(data);
 
-  docdash.sort !== false && data.sort("longname, version, since");
+  ctrlaltdoc.sort !== false && data.sort("longname, version, since");
   helper.addEventListeners(data);
 
   var sourceFiles = {};
   var sourceFilePaths = [];
   data().each(function (doclet) {
-    if (docdash.removeQuotes) {
-      if (docdash.removeQuotes === "all") {
+    if (ctrlaltdoc.removeQuotes) {
+      if (ctrlaltdoc.removeQuotes === "all") {
         if (doclet.name) {
           doclet.name = doclet.name.replace(/"/g, "");
           doclet.name = doclet.name.replace(/'/g, "");
@@ -715,7 +689,7 @@ exports.publish = function (taffyData, opts, tutorials) {
           doclet.longname = doclet.longname.replace(/"/g, "");
           doclet.longname = doclet.longname.replace(/'/g, "");
         }
-      } else if (docdash.removeQuotes === "trim") {
+      } else if (ctrlaltdoc.removeQuotes === "trim") {
         if (doclet.name) {
           doclet.name = doclet.name.replace(/^"(.*)"$/, "$1");
           doclet.name = doclet.name.replace(/^'(.*)'$/, "$1");
@@ -734,9 +708,7 @@ exports.publish = function (taffyData, opts, tutorials) {
 
         if (
           example &&
-          example.match(
-            /^\s*<caption>([\s\S]+?)<\/caption>(\s*[\n\r])([\s\S]+)$/i,
-          )
+          example.match(/^\s*<caption>([\s\S]+?)<\/caption>(\s*[\n\r])([\s\S]+)$/i)
         ) {
           caption = RegExp.$1;
           code = RegExp.$3;
@@ -776,16 +748,16 @@ exports.publish = function (taffyData, opts, tutorials) {
     if (packageInfo.name) {
       var packageName = packageInfo.name.split("/");
 
-      if (packageName.length > 1 && docdash.scopeInOutputPath !== false) {
+      if (packageName.length > 1 && ctrlaltdoc.scopeInOutputPath !== false) {
         subdirs.push(packageName[0]);
       }
 
-      if (docdash.nameInOutputPath !== false) {
+      if (ctrlaltdoc.nameInOutputPath !== false) {
         subdirs.push(packageName.length > 1 ? packageName[1] : packageName[0]);
       }
     }
 
-    if (packageInfo.version && docdash.versionInOutputPath !== false) {
+    if (packageInfo.version && ctrlaltdoc.versionInOutputPath !== false) {
       subdirs.push(packageInfo.version);
     }
 
@@ -803,13 +775,9 @@ exports.publish = function (taffyData, opts, tutorials) {
   staticFiles.forEach(function (fileName) {
     var toDir = fs.toDir(fileName.replace(fromDir, outdir));
     fs.mkPath(toDir);
-    copyFile(
-      fileName,
-      path.join(toDir, path.basename(fileName)),
-      function (err) {
-        if (err) console.err(err);
-      },
-    );
+    copyFile(fileName, path.join(toDir, path.basename(fileName)), function (err) {
+      if (err) console.err(err);
+    });
   });
 
   // copy user-specified static files to outdir
@@ -821,29 +789,19 @@ exports.publish = function (taffyData, opts, tutorials) {
     // with a bug in JSDoc 3.2.x.
     staticFilePaths =
       conf.default.staticFiles.include || conf.default.staticFiles.paths || [];
-    staticFileFilter = new (require("jsdoc/src/filter").Filter)(
-      conf.default.staticFiles,
-    );
+    staticFileFilter = new (require("jsdoc/src/filter").Filter)(conf.default.staticFiles);
     staticFileScanner = new (require("jsdoc/src/scanner").Scanner)();
 
     staticFilePaths.forEach(function (filePath) {
-      var extraStaticFiles = staticFileScanner.scan(
-        [filePath],
-        10,
-        staticFileFilter,
-      );
+      var extraStaticFiles = staticFileScanner.scan([filePath], 10, staticFileFilter);
 
       extraStaticFiles.forEach(function (fileName) {
         var sourcePath = fs.toDir(filePath);
         var toDir = fs.toDir(fileName.replace(sourcePath, outdir));
         fs.mkPath(toDir);
-        copyFile(
-          fileName,
-          path.join(toDir, path.basename(fileName)),
-          function (err) {
-            if (err) console.err(err);
-          },
-        );
+        copyFile(fileName, path.join(toDir, path.basename(fileName)), function (err) {
+          if (err) console.err(err);
+        });
       });
     });
   }
@@ -854,7 +812,7 @@ exports.publish = function (taffyData, opts, tutorials) {
 
   data().each(function (doclet) {
     var url = helper.createLink(doclet);
-    if (docdash.noURLEncode) {
+    if (ctrlaltdoc.noURLEncode) {
       url = decodeURI(url);
     }
     helper.registerLink(doclet.longname, url);
@@ -952,7 +910,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   );
 
   // common nav generation, no need for templating here, we already have full html
-  if (docdash.commonNav) {
+  if (ctrlaltdoc.commonNav) {
     fs.writeFileSync(path.join(outdir, "nav.inc.html"), view.nav, "utf8");
   }
 
@@ -967,22 +925,12 @@ exports.publish = function (taffyData, opts, tutorials) {
   Object.keys(helper.longnameToUrl).forEach(function (longname) {
     var myModules = helper.find(modules, { longname: longname });
     if (myModules.length) {
-      generate(
-        "Module",
-        myModules[0].name,
-        myModules,
-        helper.longnameToUrl[longname],
-      );
+      generate("Module", myModules[0].name, myModules, helper.longnameToUrl[longname]);
     }
 
     var myClasses = helper.find(classes, { longname: longname });
     if (myClasses.length) {
-      generate(
-        "Class",
-        myClasses[0].name,
-        myClasses,
-        helper.longnameToUrl[longname],
-      );
+      generate("Class", myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
     }
 
     var myNamespaces = helper.find(namespaces, { longname: longname });
@@ -997,12 +945,7 @@ exports.publish = function (taffyData, opts, tutorials) {
 
     var myMixins = helper.find(mixins, { longname: longname });
     if (myMixins.length) {
-      generate(
-        "Mixin",
-        myMixins[0].name,
-        myMixins,
-        helper.longnameToUrl[longname],
-      );
+      generate("Mixin", myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
     }
 
     var myExternals = helper.find(externals, { longname: longname });

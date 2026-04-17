@@ -1,7 +1,7 @@
 {
   "name": "ctrlaltdoc",
   "version": "1.0.0",
-  "description": "",
+  "description": "A nicer JSDoc template, based on docdash.",
   "main": "publish.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

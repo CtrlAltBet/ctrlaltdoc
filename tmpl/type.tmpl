@@ -2,7 +2,7 @@
     var data = obj;
     var self = this;
     data.forEach(function(name, i) {
-    if (env && env.conf && env.conf.docdash && env.conf.docdash.shortenTypes === true) {
+    if (env && env.conf && env.conf.ctrlaltdoc && env.conf.ctrlaltdoc.shortenTypes === true) {
         var nameArr = name.split(/[\.~#]/);
         var resolvedName = nameArr[nameArr.length - 1];
         if (name.startsWith("Array.<")) {
