@@ -1,0 +1,18 @@
+<?js
+    var self = this;
+    var data = obj;
+    var meta = data.meta;
+    console.log(meta)
+?>
+<header class="flex items-center">
+    <div class="flex-grow">
+    <?js= meta.title ?>
+</div>
+<div>
+    <?js if (data.search) { ?>
+            <!-- A1 -->
+        <input type="text" id="nav-search" placeholder="Search" />
+        <!-- A2 -->
+        <?js } ?>
+        </div>
+</header>
