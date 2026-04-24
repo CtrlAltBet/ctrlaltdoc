@@ -224,17 +224,30 @@ function addSignatureReturns(f) {
     returnTypesString = util.format(
       " <span>&rarr;</span> %s{%s}",
       attribsString,
-      returnTypes.map(typeEncapsulate).join("|"),
+      returnTypes.join("|"),
     );
   }
 
   f.signature =
     '<span class="signature">' +
-    (signatureEncapsulate(f.signature) || "") +
+    signaturesToSpans(f.signature || "") +
     "</span>" +
     '<span class="type-signature XYZ">' +
     returnTypesString +
     "</span>";
+}
+
+function signaturesToSpans(signatureText) {
+  // Remove paranteses and split by comma, then wrap each param in a span with a class for styling
+  let spanified = signatureText.replace(/\(|\)/g, " ");
+  spanified = spanified
+    .split(/\,/)
+    .map((part) => {
+      return `<span class="type-part ${toClassName(part)}">${part.trim()}</span>`;
+    })
+    .join(",");
+
+  return `(${spanified})`;
 }
 
 function toClassName(name) {
@@ -644,7 +657,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
   data = taffyData;
 
-  console.log("Generating documentation...", ctrlaltdoc);
+  // console.log("Generating documentation...", ctrlaltdoc);
 
   var conf = env.conf.templates || {};
   conf.default = conf.default || {};
@@ -775,6 +788,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   staticFiles.forEach(function (fileName) {
     var toDir = fs.toDir(fileName.replace(fromDir, outdir));
     fs.mkPath(toDir);
+    // console.log("Copying static file: " + fileName);
     copyFile(fileName, path.join(toDir, path.basename(fileName)), function (err) {
       if (err) console.err(err);
     });
@@ -792,6 +806,11 @@ exports.publish = function (taffyData, opts, tutorials) {
     staticFileFilter = new (require("jsdoc/src/filter").Filter)(conf.default.staticFiles);
     staticFileScanner = new (require("jsdoc/src/scanner").Scanner)();
 
+    console.log(
+      "Copying user-specified static files...",
+      conf.default.staticFiles.include,
+    );
+
     staticFilePaths.forEach(function (filePath) {
       var extraStaticFiles = staticFileScanner.scan([filePath], 10, staticFileFilter);
 
@@ -799,6 +818,10 @@ exports.publish = function (taffyData, opts, tutorials) {
         var sourcePath = fs.toDir(filePath);
         var toDir = fs.toDir(fileName.replace(sourcePath, outdir));
         fs.mkPath(toDir);
+        console.log(
+          "Copying user-specified static file: " + fileName,
+          path.join(toDir, path.basename(fileName)),
+        );
         copyFile(fileName, path.join(toDir, path.basename(fileName)), function (err) {
           if (err) console.err(err);
         });
@@ -827,7 +850,7 @@ exports.publish = function (taffyData, opts, tutorials) {
       }
     }
   });
-
+  let printed = false;
   data().each(function (doclet) {
     var url = helper.longnameToUrl[doclet.longname];
 
