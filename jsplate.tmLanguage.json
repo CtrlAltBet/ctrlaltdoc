@@ -1,0 +1,36 @@
+{
+  "name": "JsPlate (TMPL)",
+  "scopeName": "text.html.jsplate",
+  "fileTypes": ["tmpl"],
+  "patterns": [{ "include": "#jsplate-tag" }, { "include": "text.html.basic" }],
+  "repository": {
+    "jsplate-tag": {
+      "patterns": [{ "include": "#jsplate-comment" }, { "include": "#jsplate-block" }]
+    },
+    "jsplate-comment": {
+      "begin": "<\\?js\\s*\\/\\*",
+      "end": "\\*\\/\\s*\\?>",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.tag.jsplate" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.tag.jsplate" }
+      },
+      "name": "comment.block.jsplate",
+      "contentName": "comment.block.jsplate"
+    },
+    "jsplate-block": {
+      "begin": "<\\?js",
+      "end": "\\?>",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.tag.begin.jsplate" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.tag.end.jsplate" }
+      },
+      "name": "meta.embedded.block.jsplate",
+      "contentName": "source.js",
+      "patterns": [{ "include": "source.js" }]
+    }
+  }
+}

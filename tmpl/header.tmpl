@@ -5,11 +5,15 @@
 ?>
 <header class="flex items-center">
     <div class="flex-grow">
-    <?js= meta.title ?>
+        <a href="index.html"><?js= meta.title ?></a>
+    </div>
+<div class="flex">
+<div class="header-nav">
+
 </div>
-<div>
+
     <?js if (data.search) { ?>
-            <!-- A1 -->
+        <!-- A1 -->
         <input type="text" id="nav-search" placeholder="Search" />
         <!-- A2 -->
         <?js } ?>

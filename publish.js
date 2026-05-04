@@ -556,8 +556,8 @@ function linktoExternal(longName, name) {
  * @return {string} The HTML for the navigation sidebar.
  */
 
-function buildNav(members, { only = "", exclude = [] } = {}) {
-  var nav = '<h2><a href="index.html">Home</a></h2>';
+function buildNav(members) {
+  var nav = ""; //'<h2><a href="index.html">Home</a></h2>';
   var seen = {};
   var seenTutorials = {};
   var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
@@ -604,19 +604,6 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
     return ret;
   }
 
-  var defaultOrder = [
-    "Classes",
-    "Modules",
-    "Externals",
-    "Events",
-    "Namespaces",
-    "Mixins",
-    "Tutorials",
-    "Interfaces",
-    "Global",
-  ];
-
-  var order = ctrlaltdoc.sectionOrder || defaultOrder;
   var sections = {
     Classes: buildMemberNav(members.classes, "Classes", seen, linkto),
     Modules: buildMemberNav(members.modules, "Modules", {}, linkto),
@@ -634,18 +621,39 @@ function buildNav(members, { only = "", exclude = [] } = {}) {
     Global: buildMemberNavGlobal(),
   };
 
-  // Filter out any sections that are empty or not included in the specified order
-  if (only) {
-    return sections[only].replace("display: none;", "").replace("collapse_top", "");
-  } else if (exclude && exclude.length > 0) {
-    sections = Object.fromEntries(
-      Object.entries(sections).filter(([key]) => !exclude.includes(key)),
-    );
-  }
+  return { nav, sections };
+}
 
-  order.forEach((member) => (nav += sections[member]));
+// Received the output of buildNav, which is an object with keys like "Classes", "Modules", etc. and values that are the HTML for those sections. We want to concatenate the sections in a specific order to create the final navigation HTML.
+function parseNav(nav, sections) {
+  var ctrlaltdoc = (env && env.conf && env.conf.ctrlaltdoc) || {};
+  var defaultOrder = [
+    "Classes",
+    "Modules",
+    "Externals",
+    "Events",
+    "Namespaces",
+    "Mixins",
+    "Tutorials",
+    "Interfaces",
+    "Global",
+  ];
+
+  var order = ctrlaltdoc.sectionOrder || defaultOrder;
+  order.forEach((member) => (nav += sections[member] || ""));
 
   return nav;
+}
+
+function stripCollapseClasses(html) {
+  const classes = ["collapsed_header", "collapse_top", "display: none;"];
+  classes.forEach((cls) => {
+    const regex = new RegExp(`\\s*class="[^"]*${cls}[^"]*"`, "g");
+    html = html.replace(regex, "");
+    const styleRegex = new RegExp(`\\s*style="[^"]*${cls}[^"]*"`, "g");
+    html = html.replace(styleRegex, "");
+  });
+  return html;
 }
 
 /**
@@ -899,8 +907,11 @@ exports.publish = function (taffyData, opts, tutorials) {
   view.outputSourceFiles = outputSourceFiles;
 
   // once for all
-  view.nav = buildNav(members, { exlude: ["Global"] });
-  view.navGlobal = buildNav(members, { only: "Global" });
+  const { nav, sections } = buildNav(members);
+  const { Global: globalsNav, ...sectionsWithoutGlobals } = sections;
+
+  view.nav = parseNav(nav, sectionsWithoutGlobals);
+  view.navGlobal = stripCollapseClasses(globalsNav);
 
   attachModuleSymbols(find({ longname: { left: "module:" } }), members.modules);
 
