@@ -45,7 +45,7 @@
 <div class="container">
 <?js= this.partial('header.tmpl', env.conf.ctrlaltdoc) ?>
 <div class="flex">
-    <nav <?js if (env.conf.ctrlaltdoc.wrap) { ?>class="wrap"<?js } ?>>
+    <nav class="navList navLeft<?js if (env.conf.ctrlaltdoc.wrap) { ?> wrap<?js } ?>">
        
         <!-- A3 -->
         <?js if (!env.conf.ctrlaltdoc.commonNav) { ?>
@@ -77,7 +77,7 @@
         <?js } ?>
     </div>
 
-    <nav class="navRight">
+    <nav class="navList navRight">
     <?js= this.navGlobal ?>
     </nav>
 

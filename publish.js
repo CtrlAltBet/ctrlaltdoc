@@ -13,6 +13,10 @@ var taffy = require("@jsdoc/salty").taffy;
 var template = require("jsdoc/template");
 var util = require("util");
 
+// Customizations
+const { write_log } = require("./test");
+const { getItemAttributes, createListObject } = require("./ctrlaltdocs");
+
 var htmlsafe = helper.htmlsafe;
 var linkto = helper.linkto;
 var resolveAuthorLinks = helper.resolveAuthorLinks;
@@ -232,7 +236,7 @@ function addSignatureReturns(f) {
     '<span class="signature">' +
     signaturesToSpans(f.signature || "") +
     "</span>" +
-    '<span class="type-signature XYZ">' +
+    '<span class="type-signature">' +
     returnTypesString +
     "</span>";
 }
@@ -444,53 +448,63 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
       var methods = find({ kind: "function", memberof: item.longname });
       var members = find({ kind: "member", memberof: item.longname });
       var conf = (env && env.conf) || {};
-      var classes = "";
+
+      //
+      const itemAttrs = getItemAttributes(item);
+      const curLi = createListObject("li");
+      curLi.addClasses(itemAttrs.classes);
 
       // show private class?
       if (ctrlaltdoc.private === false && item.access === "private") return;
 
       // depth to show?
       if (item.ancestors && item.ancestors.length > level) {
-        classes += "level-hide";
+        curLi.addClass("level-hide");
+        // classes += "level-hide";
       }
 
-      classes = classes ? ' class="' + classes + '"' : "";
-      itemsNav += "<li" + classes + ">";
       if (!hasOwnProp.call(item, "longname")) {
-        itemsNav += linktoFn("", item.name);
+        //
+        curLi.setContent(linktoFn("", item.name));
+        //
       } else if (!hasOwnProp.call(itemsSeen, item.longname)) {
         if (conf.templates.default.useLongnameInNav) {
           displayName = item.longname;
         } else {
           displayName = item.name;
         }
-        itemsNav += linktoFn(
-          item.longname,
-          displayName.replace(/\b(module|event):/g, ""),
+
+        curLi.setContent(
+          linktoFn(item.longname, displayName.replace(/\b(module|event):/g, "")),
         );
 
-        if (
+        const isStatic =
           ctrlaltdoc.static &&
           members.find(function (m) {
             return m.scope === "static";
-          })
-        ) {
-          itemsNav += "<ul class='members'>";
+          });
+        if (isStatic) {
+          const subList = createListObject("ul");
 
           members.forEach(function (member) {
             if (!member.scope === "static") return;
-            itemsNav += "<li data-type='member'";
-            if (ctrlaltdoc.collapse) itemsNav += " style='display: none;'";
-            itemsNav += ">";
-            itemsNav += linkto(member.longname, member.name);
-            itemsNav += "</li>";
+
+            const subLi = createListObject("li");
+            subLi.addAttr("type", "member");
+            subLi.appendContent(linkto(member.longname, member.name));
+            subLi.hidden(ctrlaltdoc.collapse);
+
+            getItemAttributes(member).classes.forEach((cls) => subLi.addClass(cls));
+
+            subList.appendListObject(subLi);
           });
 
-          itemsNav += "</ul>";
+          curLi.appendListObject(subList);
         }
 
         if (methods.length) {
-          itemsNav += "<ul class='methods'>";
+          const methodsList = createListObject("ul");
+          methodsList.addClass("methods");
 
           methods.forEach(function (method) {
             if (ctrlaltdoc.static === false && method.scope === "static") return;
@@ -499,21 +513,24 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
             var navItem = "";
             var navItemLink = linkto(method.longname, method.name);
 
-            navItem += "<li data-type='method'";
-            if (ctrlaltdoc.collapse) navItem += " style='display: none;'";
-            navItem += ">";
-            navItem += navItemLink;
-            navItem += "</li>";
+            const methodLi = createListObject("li");
+            methodLi.addAttr("type", "method");
+            methodLi.appendContent(navItemLink);
+            methodLi.hidden(ctrlaltdoc.collapse);
+            getItemAttributes(method).classes.forEach((cls) => methodLi.addClass(cls));
 
-            itemsNav += navItem;
+            // if (ctrlaltdoc.collapse) methodLi.addAttr("style", "display: none;");
+
+            methodsList.appendListObject(methodLi);
           });
 
-          itemsNav += "</ul>";
+          curLi.appendListObject(methodsList);
         }
 
         itemsSeen[item.longname] = true;
       }
-      itemsNav += "</li>";
+
+      itemsNav += curLi.html();
     });
 
     if (itemsNav !== "") {
@@ -582,7 +599,15 @@ function buildNav(members) {
           (ctrlaltdoc.typedefs || g.kind !== "typedef") &&
           !hasOwnProp.call(seen, g.longname)
         ) {
-          globalNav += "<li>" + linkto(g.longname, g.name) + "</li>";
+          const curLiAttrs = getItemAttributes(g);
+
+          const curLi = createListObject("li");
+          curLi.addClasses(curLiAttrs.classes);
+          curLi.addAttr("data-type", g.kind);
+          curLi.addAttr("data-scope", g.scope);
+          curLi.setContent(linkto(g.longname, g.name));
+
+          globalNav += curLi.html();
         }
         seen[g.longname] = true;
       });
@@ -592,12 +617,13 @@ function buildNav(members) {
         ret += "<h3>" + linkto("global", "Global") + "</h3>";
       } else {
         if (ctrlaltdoc.collapse === "top") {
-          ret +=
-            '<h3 class="collapsed_header">Global</h3><ul class="collapse_top">' +
-            globalNav +
-            "</ul>";
+          ret += `<h3 class="collapsed_header">Global</h3>`;
+          ret += '<ul class="collapse_top">';
+          ret += globalNav;
+          ret += "</ul>";
         } else {
-          ret += "<h3>Global</h3><ul>" + globalNav + "</ul>";
+          ret += `<h3>Global</h3>`;
+          ret += `<ul>${globalNav}</ul>`;
         }
       }
     }
@@ -892,6 +918,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   });
 
   var members = helper.getMembers(data);
+
   members.tutorials = tutorials.children;
 
   // output pretty-printed source files by default

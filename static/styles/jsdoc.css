@@ -303,7 +303,7 @@ nav > ul > li > a {
 
 nav ul ul a {
   color: hsl(207, 1%, 60%);
-  border-left: 1px solid hsl(207, 10%, 86%);
+  /* border-left: 1px solid hsl(207, 10%, 86%); */
 }
 
 nav ul ul a,
