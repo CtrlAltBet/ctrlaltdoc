@@ -603,8 +603,8 @@ function buildNav(members) {
 
           const curLi = createListObject("li");
           curLi.addClasses(curLiAttrs.classes);
-          curLi.addAttr("data-type", g.kind);
-          curLi.addAttr("data-scope", g.scope);
+          curLi.addAttr("type", g.kind);
+          curLi.addAttr("scope", g.scope);
           curLi.setContent(linkto(g.longname, g.name));
 
           globalNav += curLi.html();
