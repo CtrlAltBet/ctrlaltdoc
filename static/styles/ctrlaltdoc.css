@@ -560,7 +560,7 @@ div.example-block {
   border-bottom-right-radius: 0.5rem; */
 }
 
-div.example-block pre {
+pre {
   margin: 0px;
   scrollbar-color: #888 transparent; /* thumb color and track color */
   background-color: transparent;
@@ -578,6 +578,7 @@ div.example-block pre {
 
 code {
   background-color: rgb(var(--color-surface-400) / 0.1);
+  border-radius: 0.25rem;
 }
 
 /* --color-highlight */
