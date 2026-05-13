@@ -117,14 +117,6 @@ section {
   width: calc(100vw - 16rem);
 }
 
-/* Block Styling */
-h4.name {
-  background-color: rgb(var(--color-surface-800));
-  border-color: rgb(var(--color-surface-700));
-  border-radius: 0.5rem;
-  box-shadow: none;
-}
-
 section header h2,
 article .container-overview h2,
 article h3.subsection-title {
@@ -183,8 +175,10 @@ h6 {
 #main h4,
 #main h5,
 #main h6 {
-  margin: 1.5em 0 0.3em;
+  /* margin: 0em 0 0.3em; */
+  margin: 0em 0 0em;
   padding: 0.25rem 1rem;
+  border-top: 0px;
 }
 
 nav a:hover,
@@ -246,13 +240,6 @@ nav {
   position: sticky;
   top: var(--topnav-height);
 }
-
-.block-member > h4.name {
-  position: sticky;
-  top: calc(var(--topnav-height) + 2.5rem);
-  z-index: 8;
-}
-
 /*  */
 /*  */
 
@@ -267,6 +254,22 @@ nav {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.grid {
+  display: grid;
+}
+
+.cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .items-center {
@@ -308,6 +311,10 @@ nav {
 .text-lg {
   font-size: 1.125rem /* 18px */;
   line-height: 1.75rem /* 28px */;
+}
+
+.w-1/2 {
+  width: 50%;
 }
 
 /* CODE COLORS */
@@ -437,4 +444,48 @@ span.param-type,
 .navList .kind-class::before {
   background-color: rgb(var(--color-param));
   background-image: var(--letter-c);
+}
+
+/* Blocks */
+.block-member > h4.name,
+.block-method > h4.name {
+  position: sticky;
+  top: calc(var(--topnav-height) + 2.5rem);
+  z-index: 8;
+}
+
+.block-member {
+  border: 1px solid rgb(var(--color-surface-700));
+  border-radius: 0.5rem;
+  padding: 0rem 1rem 1rem 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Block Styling */
+h4.name {
+  background-color: rgb(var(--color-surface-800));
+  border-color: rgb(var(--color-surface-700));
+  border-bottom-left-radius: 0.5rem;
+  /* border-bottom-right-radius: 0.5rem; */
+  border-right: 1px solid rgb(var(--color-surface-700));
+  border-left: 1px solid rgb(var(--color-surface-700));
+  box-shadow: none;
+}
+
+/* Params Table */
+table.params {
+  width: 100%;
+  max-width: 800px;
+}
+
+dl.details {
+  display: grid;
+  gap: 0.5rem 1rem;
+  border: 1px solid rgb(var(--color-surface-700));
+  border-top: none;
+  /* border-radius: 0.5rem; */
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  margin-top: 0;
+  /* padding: 1rem; */
 }
