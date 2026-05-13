@@ -24,8 +24,9 @@ var self = this;
         <p class="summary usertext"><?js= summary ?></p>
         <?js } ?>
     <?js } ?>
-    <div class="flex">
-        <div class="w-1/2 flex-grow">
+    <div class="flex gap-2">
+
+        <div class="spec-box flex-grow">
             <?js= this.partial('details.tmpl', data) ?>
 
             <?js if (data.augments && data.alias && data.alias.indexOf('module:') === 0) { ?>
@@ -47,23 +48,32 @@ var self = this;
                 <ul><li><?js= this.linkto(data['this'], data['this']) ?></li></ul>
             <?js } ?>
         </div>
-        <div class="w-1/2 flex-grow">
+
+
+        <div class="spec-box w-half-min w-half-max flex-grow ">
+
             <?js if (data.examples && examples.length) { ?>
+            <div class="example-block">
                 <h5 class="h5-examples">Example<?js= examples.length > 1? 's':'' ?></h5>
                 <?js= this.partial('examples.tmpl', examples) ?>
+            </div>
             <?js } ?>
+
+            <?js if (data.params && params.length) { ?>
+                <h5 class="h5-parameters">Parameters:</h5>
+                <?js= this.partial('params.tmpl', params) ?>
+            <?js } ?>
+
         </div>
     </div>
-    <?js if (data.params && params.length) { ?>
-        <h5 class="h5-parameters">Parameters:</h5>
-        <?js= this.partial('params.tmpl', params) ?>
-    <?js } ?>
 
     <?js if (data.kind !== 'module' && data.requires && data.requires.length) { ?>
-    <h5 class="h5-requires">Requires:</h5>
-    <ul><?js data.requires.forEach(function(r) { ?>
-        <li><?js= self.linkto(r) ?></li>
-    <?js }); ?></ul>
+    <div class="spec-box">
+        <h5 class="h5-requires">Requires:</h5>
+        <ul><?js data.requires.forEach(function(r) { ?>
+            <li><?js= self.linkto(r) ?></li>
+        <?js }); ?></ul>
+    </div>
     <?js } ?>
 
     <?js if (data.fires && fires.length) { ?>
@@ -111,17 +121,19 @@ var self = this;
         <?js });
     } } ?>
 
-    <?js if (data.returns && returns.length) { ?>
-    <h5 class="h5-returns">Returns:</h5>
-    <?js if (returns.length > 1) { ?><ul><?js
-        returns.forEach(function(r) { ?>
-            <li><?js= self.partial('returns.tmpl', r) ?></li>
-        <?js });
-    ?></ul><?js } else {
-        returns.forEach(function(r) { ?>
-            <?js= self.partial('returns.tmpl', r) ?>
-        <?js });
-    } } ?>
+    <div class="returns-box">
+        <?js if (data.returns && returns.length) { ?>
+        <h5 class="h5-returns">Returns:</h5>
+        <?js if (returns.length > 1) { ?><ul><?js
+            returns.forEach(function(r) { ?>
+                <li><?js= self.partial('returns.tmpl', r) ?></li>
+            <?js });
+        ?></ul><?js } else {
+            returns.forEach(function(r) { ?>
+                <?js= self.partial('returns.tmpl', r) ?>
+            <?js });
+        } } ?>
+    </div>
 
     <?js if (data.yields && yields.length) { ?>		
     <h5 class="h5-yields">Yields:</h5>		
