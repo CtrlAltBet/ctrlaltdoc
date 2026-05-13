@@ -129,8 +129,9 @@ section header h2,
 article .container-overview h2,
 article h3.subsection-title {
   position: sticky;
-  top: calc(var(--topnav-height) + 1rem);
-  border-radius: 0.5rem;
+  top: calc(var(--topnav-height) + 0rem);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
   background: var(--section-header-bg);
   backdrop-filter: var(--section-header-bg-filter);
   z-index: 10;
@@ -246,9 +247,9 @@ nav {
   top: var(--topnav-height);
 }
 
-article > h4.name {
+.block-member > h4.name {
   position: sticky;
-  top: calc(var(--topnav-height) + 3.5rem);
+  top: calc(var(--topnav-height) + 2.5rem);
   z-index: 8;
 }
 

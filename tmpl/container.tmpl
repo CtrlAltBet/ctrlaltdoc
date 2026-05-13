@@ -45,6 +45,7 @@
 </header>
 
 <article>
+<div class="container">
     <?js if (!doc.hideconstructor) { ?>
         <div class="container-overview">
         <?js if (doc.kind === 'module' && doc.modules) { ?>
@@ -87,7 +88,10 @@
             <li><?js= self.linkto(r, r) ?></li>
         <?js }); ?></ul>
     <?js } ?>
+</div>
 <!-- End of Section Box (Like constructor, etc.) -->
+
+<div class="container">
     <?js
         var classes = self.find({kind: 'class', memberof: doc.longname});
         if (!isGlobalPage && classes && classes.length) {
@@ -100,7 +104,9 @@
             <dd><?js if (c.summary) { ?><?js= c.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
+</div>
     <!-- End of Section Box (Like constructor, etc.) -->
+<div class="container">
     <?js
         var interfaces = self.find({kind: 'interface', memberof: doc.longname});		
         if (!isGlobalPage && interfaces && interfaces.length) {		
@@ -113,7 +119,8 @@
 	        <dd><?js if (i.summary) { ?><?js= i.summary ?><?js } ?></dd>		
 	    <?js }); ?></dl>		
 	<?js } ?>
-
+</div>
+<div class="container">
      <?js
         var mixins = self.find({kind: 'mixin', memberof: doc.longname});
         if (!isGlobalPage && mixins && mixins.length) {
@@ -125,7 +132,8 @@
             <dd><?js if (m.summary) { ?><?js= m.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
-
+</div>
+<div class="container">
     <?js
         var namespaces = self.find({kind: 'namespace', memberof: doc.longname});
         if (!isGlobalPage && namespaces && namespaces.length) {
@@ -137,7 +145,8 @@
             <dd><?js if (n.summary) { ?><?js= n.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
-
+</div>
+<div class="container">
     <?js
         var members = self.find({kind: 'member', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
 
@@ -156,7 +165,8 @@
             <?js= self.partial('members.tmpl', p) ?>
         <?js }); ?>
     <?js } ?>
-
+</div>
+<div class="container">
     <?js
         var methods = self.find({kind: 'function', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (methods && methods.length && methods.forEach) {
@@ -168,7 +178,9 @@
             <?js= self.partial('method.tmpl', m) ?>
         <?js }); ?>
     <?js } ?>
+</div>
 
+<div class="container">
     <?js
         var typedefs = self.find({kind: 'typedef', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (typedefs && typedefs.length && typedefs.forEach) {
@@ -188,7 +200,9 @@
                 }
             }); ?>
     <?js } ?>
+</div>
 
+<div class="container">
     <?js
         var events = self.find({kind: 'event', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (events && events.length && events.forEach) {
@@ -199,6 +213,7 @@
             <?js= self.partial('method.tmpl', e) ?>
         <?js }); ?>
     <?js } ?>
+</div>
 </article>
 
 </section>
